@@ -1,0 +1,59 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="generator" content="R package animation 2.5">
+	<title>Animations Using the R Language</title>
+	<link rel="stylesheet" href="css/reset.css" />
+	<link rel="stylesheet" href="css/styles.css" />
+	<link rel="stylesheet" href="css/scianimator.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+
+	<script src="js/jquery-1.4.4.min.js"></script>
+	<script src="js/jquery.scianimator.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/languages/r.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+<body>
+
+	<div class="scianimator"><div id="Rplot" style="display: inline-block;"></div></div>
+	<div class="scianimator" style="width: 480px; text-align: left"><pre><code class="r">## Animations generated in R version 3.4.2 (2017-09-28)
+##   using the package animation
+library(MSMVSampEn)
+library(scatterplot3d)
+library(animation)
+library(tidyr)
+library(readr)
+library(RevoUtils)
+library(RevoUtilsMath)
+for (i in seq(step_size + 1, nrow(data) - step_size, by = step_size)) {
+    layout(matrix(c(1, 2), 1))
+    scatterplot3d(c(data$Body_1_XYZ_Head_X[i - step_size], 
+        data$Body_1_XYZ_Head_X[i], data$Body_1_XYZ_Head_X[i + 
+            step_size]), c(data$Body_1_XYZ_Head_Y[i - step_size], 
+        data$Body_1_XYZ_Head_Y[i], data$Body_1_XYZ_Head_Y[i + 
+            step_size]), c(data$Body_1_XYZ_Head_Z[i - step_size], 
+        data$Body_1_XYZ_Head_Z[i], data$Body_1_XYZ_Head_Z[i + 
+            step_size]), type = "l", xlim = xrange1, ylim = yrange1, 
+        zlim = zrange1, xlab = "", ylab = "", zlab = "", 
+        sub = "", lwd = 2)
+    scatterplot3d(c(data$Body_2_XYZ_Head_X[i - step_size], 
+        data$Body_2_XYZ_Head_X[i], data$Body_2_XYZ_Head_X[i + 
+            step_size]), c(data$Body_2_XYZ_Head_Y[i - step_size], 
+        data$Body_2_XYZ_Head_Y[i], data$Body_2_XYZ_Head_Y[i + 
+            step_size]), c(data$Body_2_XYZ_Head_Z[i - step_size], 
+        data$Body_2_XYZ_Head_Z[i], data$Body_2_XYZ_Head_Z[i + 
+            step_size]), type = "l", xlim = xrange2, ylim = yrange2, 
+        zlim = zrange2, xlab = "", ylab = "", zlab = "", 
+        sub = "", lwd = 2)
+}
+## R version 3.4.2 (2017-09-28)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Other packages: MSMVSampEn 1.0, scatterplot3d 0.3-40, animation 2.5, tidyr 0.7.2, readr 1.1.1, RevoUtils
+## 10.0.6, RevoUtilsMath 10.0.1</code></pre></div>
+	<script src="js/Rplot.js"></script>
+<!-- highlight R code -->
+
+</body>
+</html>

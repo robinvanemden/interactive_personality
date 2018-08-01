@@ -72,6 +72,10 @@ inst/doc
 .env
 *.tex
 
+
 *.csv
+*.jpeg
 *.jpg
+*.png
+*.sav
 
