@@ -76,9 +76,9 @@ inst/doc
 *.tex
 
 
-*.csv
+#*.csv
 *.jpeg
 *.jpg
 *.png
-*.sav
+#*.sav
 
