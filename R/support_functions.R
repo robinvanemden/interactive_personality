@@ -7,29 +7,31 @@ read_and_split_data <- function(file_name) {
 
 normalize_order_body_green_red <- function(data, experimenter_color) {
   if (!is.na(experimenter_color) && experimenter_color == "green") {
-    names(data)                                           <- gsub(x = names(data), pattern = "Body_1", replacement = "#")
-    names(data)                                           <- gsub(x = names(data), pattern = "Body_2", replacement = "Body_1")
-    names(data)                                           <- gsub(x = names(data), pattern = "#", replacement = "Body_2")
+    names(data)             <- gsub(x = names(data), pattern = "Body_1", replacement = "#")
+    names(data)             <- gsub(x = names(data), pattern = "Body_2", replacement = "Body_1")
+    names(data)             <- gsub(x = names(data), pattern = "#", replacement = "Body_2")
   }
   return(data)
 }
 
-split_data_by_time                                          <- function(data, start) {
-  three_minutes                                             <- hms::as.hms("00:03:00")
-  one_point_five_minutes                                    <- hms::as.hms("00:01:30")
+split_data_by_time <- function(name, data, start) {
+  three_minutes                    <- hms::as.hms("00:03:00")
+  one_point_five_minutes           <- hms::as.hms("00:01:30")
 
-  part_start                                                <- hms::as.hms(start)
-  part_end                                                  <- hms::as.hms(part_start + three_minutes)
-  part_data                                                 <- data[hours > part_start & hours < part_end]
+  data_list                        <- list()
 
-  part_a_start                                              <- part_start
-  part_a_end                                                <- hms::as.hms(part_a_start + one_point_five_minutes)
-  part_a_data                                               <- data[hours > part_a_start & hours < part_a_end]
+  part_start                       <- hms::as.hms(start)
+  part_end                         <- hms::as.hms(part_start + three_minutes)
+  data_list[paste0(name,"_data")]  <- list(data[hours > part_start & hours < part_end])
 
-  part_b_start                                              <- part_a_end
-  part_b_end                                                <- hms::as.hms(part_b_start + one_point_five_minutes)
-  part_b_data                                               <- data[hours > part_b_start & hours < part_b_end]
-  return(list(part_data,part_a_data,part_b_data))
+  part_a_start                     <- part_start
+  part_a_end                       <- hms::as.hms(part_a_start + one_point_five_minutes)
+  data_list[paste0(name,"a_data")] <- list(data[hours > part_a_start & hours < part_a_end])
+
+  part_b_start                     <- part_a_end
+  part_b_end                       <- hms::as.hms(part_b_start + one_point_five_minutes)
+  data_list[paste0(name,"b_data")] <- list(data[hours > part_b_start & hours < part_b_end])
+  return(data_list)
 }
 
 shannon_entropy <- function(p) {

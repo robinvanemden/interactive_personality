@@ -4,7 +4,6 @@ library(dyncomp)
 library(foreign)
 library(lubridate)
 library(here)
-library(zeallot)
 
 # Set data analysis ------------------------------------------------------------------------------------------
 
@@ -19,8 +18,8 @@ source("./R/support_functions.R")
 
 data_out<- "./data_out/"
 
-data_dir_1  <- "./data_in/kinect_phase_1/"
-data_dir_2  <- "./data_in/kinect_phase_2/"
+data_dir_1  <- "./data_in/kinect/kinect_phase_1/"
+data_dir_2  <- "./data_in/kinect/kinect_phase_2/"
 
 data_dir_spss<- "./data_in/spss/"
 
@@ -54,36 +53,41 @@ for (i in 1:length(files)) {
   data_2$hours  <- hms::as.hms(as_datetime(as.integer(data_2$UNIX_timestamp/1000),origin="1970-01-01"))
 
   start_time_1 <- as.character(spss_data[exp_name,]$handshake_part_1)
-  c(part_1_data, part_1a_data, part_1b_data)  %<-% split_data_by_time(data_1, start_time_1)
+  data_list_1  <- split_data_by_time("part_1", data_1, start_time_1)
 
   start_time_2 <- as.character(spss_data[exp_name,]$conversation_part_2)
-  c(part_2_data, part_2a_data, part_2b_data)  %<-% split_data_by_time(data_2, start_time_2)
+  data_list_2  <- split_data_by_time("part_2", data_2, start_time_2)
+
+  data_list    <- append(data_list_1,data_list_2)
 
   # build up results -----------------------------------------------------------------------------------------
 
   result<- list()
   result["exp"] <- exp_name
-  result["color_1"] <- part_1_data[1,"Body_1_Color"]
-  result["color_2"] <- part_1_data[1,"Body_2_Color"]
-  result["length_color_1"]  <- as.numeric(colMeans(part_1_data[,"Body_1_Height_Estimate"]))
-  result["length_color_2"]  <- as.numeric(colMeans(part_1_data[,"Body_2_Height_Estimate"]))
+  result["color_1"] <- data_list$part_1_data[1,"Body_1_Color"]
+  result["color_2"] <- data_list$part_1_data[1,"Body_2_Color"]
+  result["length_color_1"]  <- as.numeric(colMeans(data_list$part_1_data[,"Body_1_Height_Estimate"]))
+  result["length_color_2"]  <- as.numeric(colMeans(data_list$part_1_data[,"Body_2_Height_Estimate"]))
 
-  # between subjects
+  # run main analysis ----------------------------------------------------------------------------------------
 
-  element                                     <- "Head"
-  fname                                       <- "sum"
+  element  <- "Head"    # skeleton element(s)
+  fname    <- "sum"     # summary funcion
+  w_or_b   <- "between" # between subjects
 
-  result[paste0("part_1__",element,"_",fname,"_between")] <- sum(threed_between_persons(part_1_data, element))
-  result[paste0("part_2__",element,"_",fname,"_between")] <- sum(threed_between_persons(part_2_data, element))
-  result[paste0("part_1a_",element,"_",fname,"_between")] <- sum(threed_between_persons(part_1a_data,element))
-  result[paste0("part_2a_",element,"_",fname,"_between")] <- sum(threed_between_persons(part_2a_data,element))
-  result[paste0("part_1b_",element,"_",fname,"_between")] <- sum(threed_between_persons(part_1b_data,element))
-  result[paste0("part_2b_",element,"_",fname,"_between")] <- sum(threed_between_persons(part_2b_data,element))
+  for (j in 1:length(data_list)) {
+    result_name         <- tolower(paste0(gsub("_data", "",names(data_list)[j]),
+                                          "_",fname,"_",w_or_b,"_",element))
+
+    result[result_name] <- sum(threed_between_persons(data_list[[j]],element)) # main analysis per timeframe #
+  }
+
+  # end of the main analysis ---------------------------------------------------------------------------------
 
   if(i == 1) {
     all_experiments_results <- as.data.table(result)
   } else {
-    all_experiments_results <- rbindlist(list(result, all_experiments_results), use.names = TRUE, fill = FALSE)
+    all_experiments_results <- rbindlist(list(result,all_experiments_results), use.names = TRUE, fill = FALSE)
   }
 
 }
@@ -97,8 +101,6 @@ names(all_experiments_results) <- gsub(x = names(all_experiments_results), patte
                                        replacement = "subject")
 
 fwrite(all_experiments_results, file=paste0(data_out,paste0("kinect_dyad_",name,".csv")))
-
-
 
 # ----------------------------------- TODO -------------------------------------------------------------------
 
