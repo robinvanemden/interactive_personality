@@ -1,11 +1,14 @@
 read_and_split_data <- function(file_name) {
+
   data <- fread(file_name, sep=",")
   data <- delete_na_rows(data)
   data <- cSplit(data, grep('XYZ', names(data), value=TRUE), ";")
+
   return(data)
 }
 
 normalize_order_body_green_red <- function(data, experimenter_color) {
+
   if (!is.na(experimenter_color) && experimenter_color == "green") {
     names(data)             <- gsub(x = names(data), pattern = "Body_1", replacement = "#")
     names(data)             <- gsub(x = names(data), pattern = "Body_2", replacement = "Body_1")
@@ -15,8 +18,9 @@ normalize_order_body_green_red <- function(data, experimenter_color) {
 }
 
 split_data_by_time <- function(name, data, start) {
-  three_minutes                    <- hms::as.hms("00:03:00")
+
   one_point_five_minutes           <- hms::as.hms("00:01:30")
+  three_minutes                    <- hms::as.hms("00:03:00")
 
   data_list                        <- list()
 
@@ -31,6 +35,7 @@ split_data_by_time <- function(name, data, start) {
   part_b_start                     <- part_a_end
   part_b_end                       <- hms::as.hms(part_b_start + one_point_five_minutes)
   data_list[paste0(name,"b_data")] <- list(data[hours > part_b_start & hours < part_b_end])
+
   return(data_list)
 }
 

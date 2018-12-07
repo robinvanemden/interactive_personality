@@ -5,9 +5,9 @@ library(foreign)
 library(lubridate)
 library(here)
 
-# Set data analysis ------------------------------------------------------------------------------------------
+# Set data analysis name -------------------------------------------------------------------------------------
 
-name <- "spinebase_Sum"
+name <- "sum_between_head"
 
 # General setup ----------------------------------------------------------------------------------------------
 
@@ -76,10 +76,15 @@ for (i in 1:length(files)) {
   w_or_b   <- "between" # between subjects
 
   for (j in 1:length(data_list)) {
+
+    # build up result name
+
     result_name         <- tolower(paste0(gsub("_data", "",names(data_list)[j]),
                                           "_",fname,"_",w_or_b,"_",element))
 
-    result[result_name] <- sum(threed_between_persons(data_list[[j]],element)) # main analysis per timeframe #
+    # run the main analysis for each timeframe
+
+    result[result_name] <- sum(threed_between_persons(data_list[[j]],element))
   }
 
   # end of the main analysis ---------------------------------------------------------------------------------
@@ -102,18 +107,10 @@ names(all_experiments_results) <- gsub(x = names(all_experiments_results), patte
 
 fwrite(all_experiments_results, file=paste0(data_out,paste0("kinect_dyad_",name,".csv")))
 
-# ----------------------------------- TODO -------------------------------------------------------------------
 
-#result["part_1__armddist_sum_color_1"]<- sum(threed_dist_parts(part_1_data, "Body_1","HandRight","HandLeft"))
-#result["part_2__armddist_sum_color_1"]<- sum(threed_dist_parts(part_2_data, "Body_1","HandRight","HandLeft"))
-#result["part_1__armddist_sum_color_2"]<- sum(threed_dist_parts(part_1_data, "Body_2","HandRight","HandLeft"))
-#result["part_2__armddist_sum_color_2"]<- sum(threed_dist_parts(part_2_data, "Body_2","HandRight","HandLeft"))
-#result["part_1a_armddist_sum_color_1"]<- sum(threed_dist_parts(part_1a_data,"Body_1","HandRight","HandLeft"))
-#result["part_2a_armddist_sum_color_1"]<- sum(threed_dist_parts(part_2a_data,"Body_1","HandRight","HandLeft"))
-#result["part_1a_armddist_sum_color_2"]<- sum(threed_dist_parts(part_1a_data,"Body_2","HandRight","HandLeft"))
-#result["part_2a_armddist_sum_color_2"]<- sum(threed_dist_parts(part_2a_data,"Body_2","HandRight","HandLeft"))
-#result["part_1b_armddist_sum_color_1"]<- sum(threed_dist_parts(part_1b_data,"Body_1","HandRight","HandLeft"))
-#result["part_2b_armddist_sum_color_1"]<- sum(threed_dist_parts(part_2b_data,"Body_1","HandRight","HandLeft"))
-#result["part_1b_armddist_sum_color_2"]<- sum(threed_dist_parts(part_1b_data,"Body_2","HandRight","HandLeft"))
-#result["part_2b_armddist_sum_color_2"]<- sum(threed_dist_parts(part_2b_data,"Body_2","HandRight","HandLeft"))
+
+
+
+
+
 
