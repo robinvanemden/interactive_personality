@@ -3,6 +3,7 @@ library(splitstackshape)
 library(dyncomp)
 library(foreign)
 library(lubridate)
+library(haven)
 library(here)
 
 # Set data analysis name -------------------------------------------------------------------------------------
@@ -105,10 +106,11 @@ names(all_experiments_results) <- gsub(x = names(all_experiments_results), patte
 names(all_experiments_results) <- gsub(x = names(all_experiments_results), pattern = "color_2",
                                        replacement = "subject")
 
+# save to csv
 fwrite(all_experiments_results, file=paste0(data_out,paste0("kinect_dyad_",name,".csv")))
 
-
-
+# save to spss
+write_sav(all_experiments_results, paste0(data_out,paste0("kinect_dyad_",name,".sav")))
 
 
 
